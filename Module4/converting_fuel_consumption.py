@@ -1,17 +1,20 @@
 def liters_100km_to_miles_gallon(liters):
 #
 # Write your code here.
-#
-    one_km_litres = liters / 100
-    mile_gallon = one_km_litres * 3.785411784
+    km = 100
+    one_litre_in_gallon = 3.785411784
+    one_km_in_miles = 1.609344
 
-    return mile_gallon
+    return (km * one_litre_in_gallon) / (liters * one_km_in_miles)
 
 def miles_gallon_to_liters_100km(miles):
 #
 # Write your code here
-    meters = miles * 1609.344
-    return meters
+    km = 100
+    one_litre_in_gallon = 3.785411784
+    one_km_in_miles = 1.609344
+
+    return (km * one_litre_in_gallon) / (miles * one_km_in_miles)
 #
 
 print(liters_100km_to_miles_gallon(3.9))
