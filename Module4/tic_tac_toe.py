@@ -1,57 +1,72 @@
 import random
-tic_tac_toe = [[1,2,3], [4,5,6], [7,8,9]]
+
+def initialize_board():
+    return [[1 + col + row * 3 for col in range(3)] for row in range(3)]
 
 def display_board(board):
     print("+-------+-------+-------+")
-    for i in range(3):
+    for row in board:
         print("|       |       |       |")
-        print(f"|   {board[i][0]}   |   {board[i][1]}   |   {board[i][2]}   |")
+        print("|   " + "   |   ".join(map(str, row)) + "   |")
         print("|       |       |       |")
         print("+-------+-------+-------+")
 
+def get_available_moves(board):
+    return [cell for row in board for cell in row if isinstance(cell, int)]
+
 
 def enter_move(board):
-    # The function accepts the board's current status, asks the user about their move,
-    # checks the input, and updates the board according to the user's decision.
     user_choice = int(input("What's your move?: "))
-    occupied = True
-    for row in board:
-        for col in row:
-            if col == user_choice:
-                index = row.index(col)
-                row[index] = "O"
-                occupied = False
-    if occupied:
-        display_board(board)
-        print("Invalid input. Please try again")
-        enter_move(board)
-
-    check_winner(board)
-
+    if user_choice in get_available_moves(board):
+        for row in board:
+            if user_choice in row:
+                row[row.index(user_choice)] = "O"
+                break
+    else:
+         print("Invalid move. Please try again")
 
 def computer_move(board):
-    random_row = random.choice([0,1,2])
-    random_col = random.choice([0,1,2])
-
-    if board[random_row][random_col] == "X" or board[random_row][random_col] == "O":
-        computer_move(board)
-    else:
-        board[random_row][random_col] = "X"
-
-    check_winner(board)
-
-        
-def check_winner(board):
-    pass
-    # Condition 1: If all rows are filled
-
-    # Condition 2: If indexes of all columns match
-
-    # Condition 3: If indexes of rows match the index of the row
+    move = random.choice(get_available_moves(board))
+    for row in board:
+        if move in row:
+            row[row.index(move)] = "X"
+            break
 
 
-tic_tac_toe[1][1] = "X"
+def check_winner(board, player):
+    # Check rows and columns
+    for i in range(3):
+        if all(board[i][j] == player for j in range(3)) or all(board[j][i] == player for j in range(3)):
+            return True
+    # Check diagonals
+    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+        return True
+    return False
+
+
+# Check for a draw
+def is_draw(board):
+    return not get_available_moves(board)
+
+tic_tac_toe_board = initialize_board()
+tic_tac_toe_board[1][1] = "X" # Computer goes first in the middle at first
 while True:
-    display_board(tic_tac_toe)
-    enter_move(tic_tac_toe)
-    computer_move(tic_tac_toe)
+    display_board(tic_tac_toe_board)
+    enter_move(tic_tac_toe_board)
+    if check_winner(tic_tac_toe_board, "O"):
+        display_board(tic_tac_toe_board)
+        print("You have won")
+        break
+    elif is_draw(tic_tac_toe_board):
+        display_board(tic_tac_toe_board)
+        print("It's a draw")
+        break
+    computer_move(tic_tac_toe_board)
+    if check_winner(tic_tac_toe_board, "X"):
+        display_board(tic_tac_toe_board)
+        print("Computer won")
+        break
+    elif is_draw(tic_tac_toe_board):
+        display_board(tic_tac_toe_board)
+        print("It's a draw")
+        break
