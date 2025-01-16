@@ -28,7 +28,7 @@ class Category(Base):
     __tablename__ = "categories"
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_category_id: Mapped[int] = mapped_column(Integer,ForeignKey("categories.id"), nullable=True)
-    name: Mapped[str] = mapped_column(String(250), nullable=False)
+    name: Mapped[str] = mapped_column(String(250), nullable=False, unique=True)
     # Category can have many products
     products: Mapped[list["Product"]] = relationship("Product",back_populates="category")
 
@@ -106,7 +106,7 @@ class Category(Base):
 class ProductModel(Base):
     __tablename__ = "product_models"
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String, nullable=False)
+    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     catalog_description: Mapped[str] = mapped_column(String(250), nullable=False)
     product: Mapped[list["Product"]] = relationship("Product", back_populates="product_model")
 
